@@ -1,0 +1,539 @@
+import os
+from weasyprint import HTML
+
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resume - Eglardo Fabrício Alves dos Santos</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm 12mm;
+      background-color: #0d1117;
+    }
+    
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #0d1117;
+      color: #c9d1d9;
+      font-size: 9.5pt;
+      line-height: 1.45;
+    }
+
+    /* Header Styling */
+    .header {
+      border-bottom: 2px solid #30363d;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+
+    .header-top {
+      display: table;
+      width: 100%;
+    }
+
+    .title-area {
+      display: table-cell;
+      vertical-align: top;
+      width: 65%;
+    }
+
+    .contact-area {
+      display: table-cell;
+      vertical-align: top;
+      width: 35%;
+      text-align: right;
+      font-size: 8.5pt;
+      color: #8b949e;
+    }
+
+    h1 {
+      font-size: 20pt;
+      font-weight: 700;
+      color: #58a6ff;
+      margin: 0 0 4px 0;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #f0f6fc;
+      margin-bottom: 6px;
+    }
+
+    .badges {
+      margin-top: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      color: #58a6ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 7.5pt;
+      font-weight: 600;
+      margin-right: 4px;
+      margin-bottom: 4px;
+    }
+
+    .contact-item {
+      margin-bottom: 3px;
+    }
+
+    .contact-item a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+
+    /* Layout Columns */
+    .main-container {
+      display: table;
+      width: 100%;
+    }
+
+    .left-col {
+      display: table-cell;
+      width: 68%;
+      padding-right: 14px;
+      vertical-align: top;
+    }
+
+    .right-col {
+      display: table-cell;
+      width: 32%;
+      padding-left: 10px;
+      border-left: 1px solid #21262d;
+      vertical-align: top;
+    }
+
+    /* Section Styles */
+    .section-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #f0f6fc;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 3px;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .section-title span {
+      color: #58a6ff;
+      margin-right: 4px;
+    }
+
+    .summary-box {
+      background-color: #161b22;
+      border: 1px solid #21262d;
+      border-left: 3px solid #58a6ff;
+      padding: 8px 10px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+      font-size: 9pt;
+      color: #e6edf3;
+      text-align: justify;
+    }
+
+    /* Experience Items */
+    .exp-item {
+      margin-bottom: 12px;
+      page-break-inside: avoid;
+    }
+
+    .exp-header {
+      display: table;
+      width: 100%;
+      margin-bottom: 2px;
+    }
+
+    .exp-title {
+      display: table-cell;
+      font-weight: 700;
+      color: #f0f6fc;
+      font-size: 9.5pt;
+    }
+
+    .exp-date {
+      display: table-cell;
+      text-align: right;
+      color: #8b949e;
+      font-size: 8.5pt;
+      font-weight: 500;
+    }
+
+    .exp-sub {
+      color: #79c0ff;
+      font-size: 8.5pt;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .exp-bullets {
+      margin: 0;
+      padding-left: 14px;
+    }
+
+    .exp-bullets li {
+      margin-bottom: 2px;
+      color: #c9d1d9;
+      font-size: 8.8pt;
+    }
+
+    .tech-stack {
+      margin-top: 4px;
+      font-size: 8pt;
+      color: #8b949e;
+    }
+
+    .tech-stack strong {
+      color: #a5d6ff;
+    }
+
+    /* Right Column Sidebar Blocks */
+    .sidebar-block {
+      margin-bottom: 14px;
+      page-break-inside: avoid;
+    }
+
+    .sidebar-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #f0f6fc;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 3px;
+      margin-top: 0;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .skill-group {
+      margin-bottom: 8px;
+    }
+
+    .skill-heading {
+      font-weight: 700;
+      color: #58a6ff;
+      font-size: 8.5pt;
+      margin-bottom: 2px;
+    }
+
+    .skill-tags {
+      font-size: 8pt;
+      color: #8b949e;
+      line-height: 1.35;
+    }
+
+    .edu-item {
+      margin-bottom: 8px;
+    }
+
+    .edu-degree {
+      font-weight: 600;
+      color: #e6edf3;
+      font-size: 8.5pt;
+      line-height: 1.2;
+    }
+
+    .edu-school {
+      color: #8b949e;
+      font-size: 8pt;
+    }
+
+    .edu-meta {
+      color: #79c0ff;
+      font-size: 7.5pt;
+    }
+
+    .lang-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5pt;
+    }
+
+    .lang-table td {
+      padding: 2px 0;
+    }
+
+    .lang-name {
+      color: #e6edf3;
+      font-weight: 600;
+    }
+
+    .lang-level {
+      text-align: right;
+      color: #8b949e;
+    }
+
+    .highlight-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .highlight-list li {
+      position: relative;
+      padding-left: 12px;
+      margin-bottom: 4px;
+      font-size: 8pt;
+      color: #c9d1d9;
+    }
+
+    .highlight-list li::before {
+      content: "▹";
+      position: absolute;
+      left: 0;
+      color: #58a6ff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER SECTION -->
+  <div class="header">
+    <div class="header-top">
+      <div class="title-area">
+        <h1>Eglardo Fabrício Alves dos Santos</h1>
+        <div class="subtitle">Senior Electrical & Automation Engineer</div>
+        <div class="badges">
+          <span class="badge">Industrial AI & IoT</span>
+          <span class="badge">Satellite Remote Sensing</span>
+          <span class="badge">Agrotech 5.0</span>
+          <span class="badge">Reliability & Maintenance</span>
+        </div>
+      </div>
+      <div class="contact-area">
+        <div class="contact-item"><strong>Location:</strong> Campina Grande, PB, Brazil</div>
+        <div class="contact-item"><strong>Email:</strong> guigesaifarm@gmail.com</div>
+        <div class="contact-item"><strong>Phone:</strong> +55 (83) 99601-8715</div>
+        <div class="contact-item"><strong>LinkedIn:</strong> linkedin.com/in/eglardo-fabricio</div>
+        <div class="contact-item"><strong>Status:</strong> Available for Projects / Willing to Travel</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN BODY CONTENT -->
+  <div class="main-container">
+    
+    <!-- LEFT COLUMN (Main Experience & Summary) -->
+    <div class="left-col">
+      
+      <!-- PROFESSIONAL SUMMARY -->
+      <div class="section-title"><span>01.</span> Professional Profile</div>
+      <div class="summary-box">
+        Senior Electrical Engineer and technology developer with 15+ years of multidisciplinary expertise spanning electrical engineering, industrial automation, instrumentation, and reliability engineering. Specializes in integrating Artificial Intelligence, Data Science, IoT, and satellite-based remote sensing into Agrotech 5.0 and industrial monitoring. Proven track record in developing end-to-end cloud and embedded solutions, processing Sentinel-2 satellite imagery for vegetation analysis, and deploying predictive maintenance systems for critical infrastructure.
+      </div>
+
+      <!-- PROFESSIONAL EXPERIENCE -->
+      <div class="section-title"><span>02.</span> Professional Experience</div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-title">Project Developer (Independent)</div>
+          <div class="exp-date">2019 — Present</div>
+        </div>
+        <div class="exp-sub">GuigesAIFarm</div>
+        <ul class="exp-bullets">
+          <li>Architect and develop end-to-end software, AI, and IoT solutions applied to precision agriculture and industrial remote monitoring.</li>
+          <li>Engineered custom Machine Learning & Deep Learning architectures for predictive analytics, computer vision, and anomaly detection.</li>
+          <li>Integrated embedded microcontrollers, IoT sensors, and LoRa/LoRaWAN communication networks for real-time telemetry acquisition.</li>
+          <li>Processed and analyzed Sentinel-2 satellite imagery utilizing vegetation and water indices (NDVI, NDRE, SAVI, NDWI, EVI, NBR, NRFI, NDPI) for crop vigor and stress monitoring.</li>
+          <li>Designed SaaS architecture prototypes for smart farming and geospatial analytics using Python, TypeScript, and SQL databases.</li>
+        </ul>
+        <div class="tech-stack"><strong>Tech Stack:</strong> Python, PyTorch, OpenCV, Scikit-learn, TypeScript, Node.js, SQL, LoRaWAN, GIS, Cloud</div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-title">Production Planning & Control Analyst</div>
+          <div class="exp-date">Jan 2024 — Mar 2024</div>
+        </div>
+        <div class="exp-sub">Supercitrus — Uberlândia, MG</div>
+        <ul class="exp-bullets">
+          <li>Managed and monitored industrial production activities, materials control, and supply chain workflows supporting MRP processes.</li>
+          <li>Utilized ERP systems and analytical tools to establish operational KPIs, optimizing production scheduling and reporting accuracy.</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-title">Mathematics & Science Educator</div>
+          <div class="exp-date">2020 — 2023</div>
+        </div>
+        <div class="exp-sub">Prefeitura Municipal de Uberlândia — MG</div>
+        <ul class="exp-bullets">
+          <li>Taught Mathematics, Physics fundamentals, and General Science using Project-Based Learning (PBL) and flipped classroom methodologies.</li>
+          <li>Integrated computational tools including GeoGebra, MATLAB, and digital platforms to enhance STEM education engagement.</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-title">Electrical Project Manager</div>
+          <div class="exp-date">Jan 2017 — Dec 2019</div>
+        </div>
+        <div class="exp-sub">Eletroíta — Renewable Energy — João Pessoa, PB</div>
+        <ul class="exp-bullets">
+          <li>Led engineering design and execution for residential, commercial, and industrial photovoltaic (PV) solar energy systems.</li>
+          <li>Performed demand and irradiance studies, system sizing, medium/low voltage electrical design, and techno-economic ROI analyses.</li>
+        </ul>
+        <div class="tech-stack"><strong>Tools:</strong> AutoCAD, Revit, PVsyst, HOMER, DIALux</div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-title">First Lieutenant (Reserve) — Electronics Engineer</div>
+          <div class="exp-date">Feb 2012 — Nov 2016</div>
+        </div>
+        <div class="exp-sub">Brazilian Navy — Rio de Janeiro, RJ</div>
+        <ul class="exp-bullets">
+          <li>Directed maintenance programs for mission-critical electronic, electromechanical, radar, and naval navigation systems.</li>
+          <li>Coordinated multidisciplinary technical teams in executing preventive, corrective, and predictive maintenance protocols under high-stakes operational environments.</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <div class="exp-title">Electrical Engineering Intern</div>
+          <div class="exp-date">Jun 2011 — Dec 2011</div>
+        </div>
+        <div class="exp-sub">BM Engenharia Elétrica — Açucena, MG</div>
+        <ul class="exp-bullets">
+          <li>Supported field engineering operations, electrical substation installations, and hydroelectric power plant construction projects.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN (Sidebar: Skills, Education, Languages) -->
+    <div class="right-col">
+
+      <!-- KEY HIGHLIGHTS -->
+      <div class="sidebar-block">
+        <div class="sidebar-title">Highlights</div>
+        <ul class="highlight-list">
+          <li>15+ Years Multidisciplinary Experience</li>
+          <li>8 Academic Degrees & Specializations</li>
+          <li>Ex-Officer (Brazilian Navy)</li>
+          <li>Agrotech 5.0 & Satellite GIS Pioneer</li>
+          <li>End-to-End AI/IoT System Architect</li>
+        </ul>
+      </div>
+
+      <!-- TECHNICAL SKILLS -->
+      <div class="sidebar-block">
+        <div class="sidebar-title">Technical Expertise</div>
+        
+        <div class="skill-group">
+          <div class="skill-heading">Automation & Industrial IoT</div>
+          <div class="skill-tags">PLC (IEC 61131-3: ST/LD/FBD/SFC), HART, WirelessHART, Modbus RTU/TCP, PROFIBUS, PROFINET, EtherNet/IP, ISOBUS, OPC UA, MQTT, LoRa/LoRaWAN.</div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-heading">Software, Data & AI</div>
+          <div class="skill-tags">Python, JavaScript, TypeScript, Node.js, SQL, REST APIs, Machine Learning, Deep Learning, Computer Vision (OpenCV, YOLO), PyTorch, Scikit-learn.</div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-heading">Agrotech & Geospatial</div>
+          <div class="skill-tags">Sentinel-2 Imagery, QGIS, Geoprocessing, Indices: NDVI, NDRE, SAVI, NDWI, EVI, NBR, NRFI, NDPI, Smart Agriculture Sensors.</div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-heading">Reliability & Power Systems</div>
+          <div class="skill-tags">FMEA, RCM, CMMS, Condition Monitoring, Solar PV Sizing, Medium/Low Voltage, NR-10, AutoCAD, Revit, PVsyst, HOMER, DIALux.</div>
+        </div>
+      </div>
+
+      <!-- EDUCATION & DEGREES -->
+      <div class="sidebar-block">
+        <div class="sidebar-title">Education (8 Degrees)</div>
+
+        <div class="edu-item">
+          <div class="edu-degree">B.S. Electrical & Electronics Engineering</div>
+          <div class="edu-school">Federal University of Campina Grande (UFCG)</div>
+          <div class="edu-meta">2011</div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">Postgrad: Geoprocessing</div>
+          <div class="edu-school">Faculdade Central de Minas</div>
+          <div class="edu-meta">2026 · 640h</div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">Postgrad: Agriculture & Agribusiness</div>
+          <div class="edu-school">Faculdade Central de Minas</div>
+          <div class="edu-meta">2026 · 640h</div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">Postgrad: Information Technology</div>
+          <div class="edu-school">Faculdade Central de Minas</div>
+          <div class="edu-meta">2026 · 640h</div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">Postgrad: Software Engineering</div>
+          <div class="edu-school">Universidade Estácio de Sá</div>
+          <div class="edu-meta">2020 · 360h</div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">B.S. Mathematics</div>
+          <div class="edu-school">Universidade Estácio de Sá</div>
+          <div class="edu-meta">2019</div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">Postgrad: Math, Statistics & Physics</div>
+          <div class="edu-school">FAVEI</div>
+          <div class="edu-meta">2021 · 700h</div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">Military Specialization in Electronics</div>
+          <div class="edu-school">Brazilian Navy</div>
+          <div class="edu-meta">2013</div>
+        </div>
+      </div>
+
+      <!-- LANGUAGES -->
+      <div class="sidebar-block">
+        <div class="sidebar-title">Languages</div>
+        <table class="lang-table">
+          <tr><td class="lang-name">Portuguese</td><td class="lang-level">Native</td></tr>
+          <tr><td class="lang-name">English</td><td class="lang-level">Fluent</td></tr>
+          <tr><td class="lang-name">German</td><td class="lang-level">Advanced</td></tr>
+          <tr><td class="lang-name">Russian</td><td class="lang-level">Basic</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
+"""
+
+html_path = "resume_eglardo_fabricio.html"
+pdf_path = "resume_eglardo_fabricio_en.pdf"
+
+with open(html_path, "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+HTML(html_path).write_pdf(pdf_path)
+print(f"PDF generated successfully: {pdf_path}")
