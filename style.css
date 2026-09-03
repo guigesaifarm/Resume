@@ -1,0 +1,292 @@
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm 12mm;
+      background-color: #0d1117;
+    }
+    
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #0d1117;
+      color: #c9d1d9;
+      font-size: 9.5pt;
+      line-height: 1.45;
+    }
+
+    /* Header Styling */
+    .header {
+      border-bottom: 2px solid #30363d;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+
+    .header-top {
+      display: table;
+      width: 100%;
+    }
+
+    .title-area {
+      display: table-cell;
+      vertical-align: top;
+      width: 65%;
+    }
+
+    .contact-area {
+      display: table-cell;
+      vertical-align: top;
+      width: 35%;
+      text-align: right;
+      font-size: 8.5pt;
+      color: #8b949e;
+    }
+
+    h1 {
+      font-size: 20pt;
+      font-weight: 700;
+      color: #58a6ff;
+      margin: 0 0 4px 0;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #f0f6fc;
+      margin-bottom: 6px;
+    }
+
+    .badges {
+      margin-top: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      color: #58a6ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 7.5pt;
+      font-weight: 600;
+      margin-right: 4px;
+      margin-bottom: 4px;
+    }
+
+    .contact-item {
+      margin-bottom: 3px;
+    }
+
+    .contact-item a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+
+    /* Layout Columns */
+    .main-container {
+      display: table;
+      width: 100%;
+    }
+
+    .left-col {
+      display: table-cell;
+      width: 68%;
+      padding-right: 14px;
+      vertical-align: top;
+    }
+
+    .right-col {
+      display: table-cell;
+      width: 32%;
+      padding-left: 10px;
+      border-left: 1px solid #21262d;
+      vertical-align: top;
+    }
+
+    /* Section Styles */
+    .section-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #f0f6fc;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 3px;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .section-title span {
+      color: #58a6ff;
+      margin-right: 4px;
+    }
+
+    .summary-box {
+      background-color: #161b22;
+      border: 1px solid #21262d;
+      border-left: 3px solid #58a6ff;
+      padding: 8px 10px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+      font-size: 9pt;
+      color: #e6edf3;
+      text-align: justify;
+    }
+
+    /* Experience Items */
+    .exp-item {
+      margin-bottom: 12px;
+      page-break-inside: avoid;
+    }
+
+    .exp-header {
+      display: table;
+      width: 100%;
+      margin-bottom: 2px;
+    }
+
+    .exp-title {
+      display: table-cell;
+      font-weight: 700;
+      color: #f0f6fc;
+      font-size: 9.5pt;
+    }
+
+    .exp-date {
+      display: table-cell;
+      text-align: right;
+      color: #8b949e;
+      font-size: 8.5pt;
+      font-weight: 500;
+    }
+
+    .exp-sub {
+      color: #79c0ff;
+      font-size: 8.5pt;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .exp-bullets {
+      margin: 0;
+      padding-left: 14px;
+    }
+
+    .exp-bullets li {
+      margin-bottom: 2px;
+      color: #c9d1d9;
+      font-size: 8.8pt;
+    }
+
+    .tech-stack {
+      margin-top: 4px;
+      font-size: 8pt;
+      color: #8b949e;
+    }
+
+    .tech-stack strong {
+      color: #a5d6ff;
+    }
+
+    /* Right Column Sidebar Blocks */
+    .sidebar-block {
+      margin-bottom: 14px;
+      page-break-inside: avoid;
+    }
+
+    .sidebar-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #f0f6fc;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 3px;
+      margin-top: 0;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .skill-group {
+      margin-bottom: 8px;
+    }
+
+    .skill-heading {
+      font-weight: 700;
+      color: #58a6ff;
+      font-size: 8.5pt;
+      margin-bottom: 2px;
+    }
+
+    .skill-tags {
+      font-size: 8pt;
+      color: #8b949e;
+      line-height: 1.35;
+    }
+
+    .edu-item {
+      margin-bottom: 8px;
+    }
+
+    .edu-degree {
+      font-weight: 600;
+      color: #e6edf3;
+      font-size: 8.5pt;
+      line-height: 1.2;
+    }
+
+    .edu-school {
+      color: #8b949e;
+      font-size: 8pt;
+    }
+
+    .edu-meta {
+      color: #79c0ff;
+      font-size: 7.5pt;
+    }
+
+    .lang-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5pt;
+    }
+
+    .lang-table td {
+      padding: 2px 0;
+    }
+
+    .lang-name {
+      color: #e6edf3;
+      font-weight: 600;
+    }
+
+    .lang-level {
+      text-align: right;
+      color: #8b949e;
+    }
+
+    .highlight-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .highlight-list li {
+      position: relative;
+      padding-left: 12px;
+      margin-bottom: 4px;
+      font-size: 8pt;
+      color: #c9d1d9;
+    }
+
+    .highlight-list li::before {
+      content: "▹";
+      position: absolute;
+      left: 0;
+      color: #58a6ff;
+    }
+  </style>
